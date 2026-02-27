@@ -5,8 +5,6 @@ services:
     build: .
     container_name: laravel_app
     restart: unless-stopped
-    volumes:
-      - .:/var/www
     depends_on:
       - mysql
     networks:
@@ -19,8 +17,8 @@ services:
     ports:
       - '80:80'
     volumes:
-      - .:/var/www
       - ./docker/nginx:/etc/nginx/conf.d
+      - .:/var/www:ro
     depends_on:
       - app
     networks:
@@ -32,9 +30,10 @@ services:
     restart: unless-stopped
     environment:
       MYSQL_DATABASE: bookwormies
-      MYSQL_ROOT_PASSWORD: rootpassword
       MYSQL_USER: laravel
       MYSQL_PASSWORD: strongpassword
+      MYSQL_ROOT_PASSWORD: rootpassword
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
     volumes:
       - dbdata:/var/lib/mysql
     networks:
