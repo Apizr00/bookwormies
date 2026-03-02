@@ -10,15 +10,17 @@ services:
     networks:
       - laravel
 
-  nginx:
-    image: nginx:alpine
-    container_name: laravel_nginx
+  apache:
+    build:
+      context: ./docker/apache
+      dockerfile: Dockerfile
+    container_name: laravel_apache
     restart: unless-stopped
     ports:
       - '80:80'
     volumes:
-      - ./docker/nginx:/etc/nginx/conf.d
-      - .:/var/www:ro
+      - ./docker/apache/laravel.conf:/usr/local/apache2/conf/extra/laravel.conf:ro
+      - .:/var/www/html:ro
     depends_on:
       - app
     networks:
